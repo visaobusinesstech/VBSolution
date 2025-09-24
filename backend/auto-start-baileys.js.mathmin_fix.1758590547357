@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+
+const ServerManager = require('./server-manager');
+const path = require('path');
+
+console.log('🚀 Iniciando Baileys Server Manager...');
+
+const manager = new ServerManager();
+
+// Função para iniciar o servidor
+async function startBaileysServer() {
+  console.log('📱 Iniciando servidor Baileys...');
+  
+  const success = await manager.startServer();
+  
+  if (success) {
+    console.log('✅ Baileys Server iniciado com sucesso!');
+    console.log('📱 API disponível em: http://localhost:3000/api');
+    console.log('🔗 Teste: http://localhost:3000/api/test');
+    
+    // Manter o processo vivo
+    process.on('SIGINT', async () => {
+      console.log('\n🛑 Parando servidor Baileys...');
+      await manager.stopServer();
+      process.exit(0);
+    });
+    
+    process.on('SIGTERM', async () => {
+      console.log('\n🛑 Parando servidor Baileys...');
+      await manager.stopServer();
+      process.exit(0);
+    });
+    
+    // Verificar saúde do servidor periodicamente
+    Math.min(undefined * 1000, 2147483647)(async () => {
+      const isHealthy = await manager.checkServerHealth();
+      if (!isHealthy && manager.isRunning) {
+        console.log('⚠️ Servidor não está respondendo, reiniciando...');
+        await manager.ensureServerRunning();
+      }
+    }, 30000); // Verificar a cada 30 segundos
+    
+    console.log('🔄 Monitoramento ativo - verificando saúde do servidor a cada 30s');
+    
+  } else {
+    console.log('❌ Falha ao iniciar servidor Baileys');
+    process.exit(1);
+  }
+}
+
+// Iniciar o servidor
+startBaileysServer();

@@ -1,0 +1,901 @@
+/* Importar estilos de scrollbar personalizados */
+@import './styles/scrollbar.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variáveis CSS para componentes UI */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+  
+  /* Cores personalizáveis por empresa */
+  --sidebar-color: #dee2e3;
+  --topbar-color: #3F30F1;
+  --button-color: #4A5477;
+}
+
+/* Sombra de relevo personalizada para sidebar */
+.sidebar-shadow {
+  box-shadow: 
+    4px 0 20px rgba(0, 0, 0, 0.08),
+    2px 0 8px rgba(0, 0, 0, 0.04),
+    inset -1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Sombra de relevo mais pronunciada */
+.sidebar-shadow-elevated {
+  box-shadow: 
+    6px 0 25px rgba(0, 0, 0, 0.12),
+    3px 0 12px rgba(0, 0, 0, 0.06),
+    inset -1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Sombra de relevo sutil */
+.sidebar-shadow-subtle {
+  box-shadow: 
+    2px 0 12px rgba(0, 0, 0, 0.06),
+    1px 0 6px rgba(0, 0, 0, 0.03);
+}
+
+/* Sombra de relevo com borda interna */
+.sidebar-shadow-inset {
+  box-shadow: 
+    4px 0 20px rgba(0, 0, 0, 0.08),
+    inset -1px 0 0 rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Transição suave para sombras */
+.sidebar-shadow-transition {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Hover effect para sidebar */
+.sidebar-shadow:hover {
+  box-shadow: 
+    6px 0 25px rgba(0, 0, 0, 0.12),
+    3px 0 12px rgba(0, 0, 0, 0.06),
+    inset -1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Estilos para dropdowns da Topbar */
+.topbar-dropdown {
+  background-color: white !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  z-index: 1000 !important;
+}
+
+.topbar-dropdown-item {
+  background-color: white !important;
+  color: #374151 !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.topbar-dropdown-item:hover {
+  background-color: #f9fafb !important;
+}
+
+.topbar-dropdown-item:focus {
+  background-color: #f3f4f6 !important;
+  outline: none !important;
+}
+
+@layer base {
+  html {
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  }
+  
+  body {
+    background-color: #F8FAFC;
+    color: #111827;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  }
+}
+
+@layer components {
+  /* Estilos específicos para a página de atividades - idênticos à referência */
+  .activities-page {
+    background-color: #F8FAFC;
+    min-height: 100vh;
+  }
+
+  .activities-header {
+    background-color: white;
+    border-bottom: 1px solid #E5E7EB;
+    height: 48px;
+    padding: 0 24px;
+    margin-bottom: 24px;
+  }
+
+  .activities-tab-active {
+    background-color: #2B6CB0;
+    color: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .activities-tab-inactive {
+    color: #6B7280;
+  }
+
+  .activities-tab-inactive:hover {
+    background-color: #F3F4F6;
+    color: #374151;
+  }
+
+  .activities-search {
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 8px 12px 8px 40px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .activities-search:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 1px #3B82F6;
+  }
+
+  .activities-select {
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    height: 32px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: white;
+  }
+
+  .activities-button {
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: white;
+    transition: all 0.2s ease;
+  }
+
+  .activities-button:hover {
+    background-color: #F3F4F6;
+  }
+
+  .activities-kanban-column {
+    min-width: 280px;
+    background-color: #F8FAFC;
+  }
+
+  .activities-kanban-header {
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .activities-kanban-count {
+    background-color: #F3F4F6;
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .activities-card {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .activities-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .activities-card-title {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .activities-card-description {
+    color: #6B7280;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  .activities-priority-badge {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 4px;
+  }
+
+  .activities-priority-urgent {
+    background-color: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+  }
+
+  .activities-priority-high {
+    background-color: #FEF3C7;
+    color: #D97706;
+    border: 1px solid #FDE68A;
+  }
+
+  .activities-priority-medium {
+    background-color: #DBEAFE;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+  }
+
+  .activities-priority-low {
+    background-color: #D1FAE5;
+    color: #059669;
+    border: 1px solid #A7F3D0;
+  }
+
+  .activities-tag-badge {
+    background-color: #F3F4F6;
+    color: #6B7280;
+    font-size: 12px;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 4px;
+  }
+
+  .activities-avatar {
+    width: 24px;
+    height: 24px;
+    background-color: #E5E7EB;
+    color: #6B7280;
+    font-size: 12px;
+  }
+
+  .activities-employee-name {
+    color: #6B7280;
+    font-size: 12px;
+  }
+
+  .activities-date {
+    color: #6B7280;
+    font-size: 12px;
+  }
+
+  .activities-new-task-button {
+    width: 100%;
+    height: 48px;
+    border: 2px dashed #D1D5DB;
+    color: #6B7280;
+    background-color: #F9FAFB;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .activities-new-task-button:hover {
+    color: #374151;
+    border-color: #9CA3AF;
+  }
+
+  .activities-floating-button {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    background-color: #0C1A3B;
+    border-radius: 50%;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    z-index: 50;
+  }
+
+  .activities-floating-button:hover {
+    background-color: #0F2A5C;
+    transform: scale(1.05);
+  }
+
+  /* Estilos específicos para o Kanban Board da imagem */
+  .kanban-board {
+    background-color: #F8FAFC;
+  }
+
+  .kanban-column {
+    min-width: 280px;
+    background-color: #F8FAFC;
+  }
+
+  .kanban-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .kanban-column-title {
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .kanban-column-count {
+    background-color: #F3F4F6;
+    color: #6B7280;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .kanban-task-card {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .kanban-task-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .kanban-task-title {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .kanban-task-subtitle {
+    color: #6B7280;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+
+  .kanban-priority-badge {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .kanban-priority-urgent {
+    background-color: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+  }
+
+  .kanban-priority-medium {
+    background-color: #DBEAFE;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+  }
+
+  .kanban-task-date {
+    color: #6B7280;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .kanban-new-task-button {
+    width: 100%;
+    height: 48px;
+    border: 2px dashed #D1D5DB;
+    color: #6B7280;
+    background-color: #F9FAFB;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .kanban-new-task-button:hover {
+    color: #374151;
+    border-color: #9CA3AF;
+    background-color: #F3F4F6;
+  }
+
+  /* Estilos específicos para o layout exato da imagem */
+  .kanban-layout {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .kanban-layout-bottom {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+
+  .kanban-layout-bottom .col-span-1:nth-child(1),
+  .kanban-layout-bottom .col-span-1:nth-child(2) {
+    visibility: hidden;
+  }
+
+  .kanban-layout-bottom .col-span-1:nth-child(3) {
+    grid-column: 3;
+  }
+
+  .kanban-layout-bottom .col-span-1:nth-child(4) {
+    grid-column: 4;
+  }
+
+  /* Estilos para os botões de navegação entre páginas */
+  .navigation-buttons {
+    background-color: white;
+    border-bottom: 1px solid #E5E7EB;
+    padding: 12px 24px;
+    margin-bottom: 24px;
+  }
+
+  .navigation-buttons-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .navigation-button {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+  }
+
+  .navigation-button-active {
+    background-color: #2563EB;
+    color: white;
+    border: none;
+  }
+
+  .navigation-button-active:hover {
+    background-color: #1D4ED8;
+  }
+
+  .navigation-button-inactive {
+    background-color: transparent;
+    color: #6B7280;
+    border: none;
+  }
+
+  .navigation-button-inactive:hover {
+    color: #374151;
+    background-color: #F3F4F6;
+  }
+}
+
+/* Scrollbar personalizada */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Garantir que apenas uma seta seja exibida em todos os selects */
+[data-radix-select-trigger] svg:not([data-radix-select-icon]) {
+  display: none !important;
+}
+
+[data-radix-select-trigger] [data-radix-select-icon] {
+  position: absolute !important;
+  right: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+/* CSS específico para corrigir o problema das duas setas */
+.select-trigger-fixed {
+  position: relative !important;
+}
+
+.select-trigger-fixed .select-chevron-icon {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+.select-trigger-fixed svg:not(.select-chevron-icon) {
+  display: none !important;
+}
+
+/* Correção específica para selects das activities */
+.activities-select {
+  position: relative !important;
+}
+
+.activities-select svg:not([data-radix-select-icon]) {
+  display: none !important;
+}
+
+.activities-select [data-radix-select-icon] {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+/* Botões de filtro mais compactos */
+.compact-filter-button {
+  min-height: 24px !important;
+  height: 24px !important;
+  padding: 2px 6px !important;
+}
+
+/* Selects de filtro mais compactos */
+.compact-filter-select {
+  min-height: 24px !important;
+  height: 24px !important;
+  padding: 2px 6px !important;
+}
+
+/* Inputs de filtro mais compactos */
+.compact-filter-input {
+  min-height: 24px !important;
+  height: 24px !important;
+  padding: 2px 6px !important;
+}
+
+/* Estilos específicos para a tela de Planejador */
+.planejador-page {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Estilos para o ClickUp Kanban */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.planejador-page .summary-row {
+  margin-bottom: 2rem;
+}
+
+.planejador-page .sprints-section {
+  margin-bottom: 2rem;
+}
+
+.planejador-page .kanban-section {
+  margin-bottom: 2rem;
+}
+
+/* Responsividade para a tela de planejador */
+@media (max-width: 1279px) {
+  .planejador-page .summary-row .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .planejador-page .sprints-section .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .planejador-page .kanban-section .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1023px) {
+  .planejador-page .summary-row .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .planejador-page .sprints-section .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .planejador-page .kanban-section .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .planejador-page {
+    padding: 1rem;
+  }
+}
+
+/* Estilos responsivos para Activities */
+.activities-page {
+  overflow-x: hidden;
+}
+
+/* Container do Kanban horizontal responsivo */
+.activities-kanban-container {
+  display: flex;
+  gap: 0.75rem; /* Gap otimizado entre colunas */
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+/* Garantir que as colunas do Kanban sejam responsivas */
+.kanban-column {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+.kanban-column:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.kanban-column .kanban-content {
+  flex: 1;
+  min-height: 200px;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+/* Garantir que o texto não quebre o layout */
+.kanban-column h3,
+.kanban-column h4,
+.kanban-column p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 1024px) {
+  .activities-kanban-container {
+    gap: 12px;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+  
+  .kanban-column {
+    min-width: 280px;
+    width: 280px;
+    flex-shrink: 0;
+  }
+}
+
+/* Responsividade para telas grandes */
+@media (min-width: 1024px) {
+  .activities-kanban-container {
+    gap: 12px;
+    overflow-x: hidden; /* Sem scroll em telas grandes - colunas se ajustam */
+  }
+  
+  .kanban-column {
+    flex: 1;
+    max-width: none;
+    flex-shrink: 1;
+  }
+}
+
+/* Responsividade adicional para telas muito pequenas */
+@media (max-width: 480px) {
+  .planejador-page .summary-row .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .planejador-page .sprints-section .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .planejador-page .kanban-section .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .planejador-page .sprints-section .flex {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .planejador-page .sprints-section .flex > div {
+    width: 100%;
+  }
+}
+
+/* Estilos para os cards de tarefa no Kanban */
+.planejador-page .kanban-section .bg-gray-50 {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Otimização para caber na tela sem scroll */
+.activities-page {
+  height: calc(100vh - 120px); /* Altura total menos header */
+  overflow: hidden; /* Remove scroll vertical */
+}
+
+.activities-page .kanban-container {
+  max-height: calc(100vh - 200px); /* Altura máxima para caber na tela */
+}
+
+/* Layout otimizado para sidebar colapsado */
+@media (max-width: 1279px) {
+  .activities-page {
+    padding-left: 0.25rem; /* Padding mínimo no sidebar colapsado */
+    padding-right: 0.25rem;
+  }
+  
+  #activities-kanban-container {
+    margin: 0; /* Remove margem para ocupar toda a largura */
+    width: calc(100vw - 80px - 0.5rem) !important; /* Força largura total com padding mínimo */
+  }
+  
+  /* Ajustar alinhamento para ficar embaixo do primeiro botão de navegação */
+  .activities-page .kanban-container {
+    margin-left: 0;
+    padding-left: 0;
+  }
+  
+  /* Aumentar altura máxima no sidebar colapsado */
+  .activities-page .kanban-container {
+    max-height: calc(100vh - 150px) !important;
+  }
+}
+
+/* Esconder barra de rolagem do navegador para o Kanban */
+#activities-kanban-container {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+#activities-kanban-container::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+/* Barra de rolagem customizada do sistema */
+.custom-scrollbar-system {
+  position: relative;
+}
+
+.custom-scrollbar-system .scroll-track {
+  background: #E5E7EB;
+  border-radius: 4px;
+  height: 8px;
+  position: relative;
+  cursor: pointer;
+}
+
+.custom-scrollbar-system .scroll-thumb {
+  background: #3B82F6;
+  border-radius: 4px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.custom-scrollbar-system .scroll-thumb:hover {
+  background: #2563EB;
+}
+
+/* Responsividade para diferentes tamanhos de sidebar */
+@media (min-width: 1280px) {
+  /* Sidebar expandido - blocos compactos */
+  .kanban-column {
+    min-width: 240px;
+  }
+}
+
+.planejador-page .kanban-section .bg-gray-50:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Estilos para os botões de nova tarefa */
+.planejador-page .kanban-section button[class*="border-dashed"] {
+  transition: all 0.2s ease-in-out;
+}
+
+.planejador-page .kanban-section button[class*="border-dashed"]:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+/* Estilos para os badges de prioridade */
+.planejador-page .bg-red-100 {
+  background-color: #fee2e2 !important;
+}
+
+.planejador-page .text-red-800 {
+  color: #b91c1c !important;
+}
+
+.planejador-page .bg-yellow-100 {
+  background-color: #fef3c7 !important;
+}
+
+.planejador-page .text-yellow-800 {
+  color: #b45309 !important;
+}
+
+.planejador-page .bg-blue-100 {
+  background-color: #eef2ff !important;
+}
+
+.planejador-page .text-blue-800 {
+  color: #4f46e5 !important;
+}
+
+/* Animação para as ondas do player de áudio */
+@keyframes waveform {
+  0% {
+    height: 8px;
+  }
+  100% {
+    height: 28px;
+  }
+}

@@ -1,0 +1,144 @@
+#!/usr/bin/env node
+
+const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+class BaileysMonitor {
+  constructor() {
+    this.process = null;
+    this.restartCount = 0;
+    this.maxRestarts = 10;
+    this.restartDelay = 5000; // 5 seconds
+    this.healthCheckInterval = 30000; // 30 seconds
+    this.logFile = path.join(__dirname, 'baileys-monitor.log');
+    this.pidFile = path.join(__dirname, 'baileys-server.pid');
+    
+    // Setup signal handlers
+    process.on('SIGINT', () => this.shutdown());
+    process.on('SIGTERM', () => this.shutdown());
+    process.on('uncaughtException', (error) => this.handleError(error));
+    process.on('unhandledRejection', (reason) => this.handleError(reason));
+  }
+
+  log(message) {
+    const timestamp = new Date().toISOString();
+    const logMessage = `[${timestamp}] ${message}\n`;
+    console.log(logMessage.trim());
+    fs.appendFileSync(this.logFile, logMessage);
+  }
+
+  startServer() {
+    this.log('🚀 Starting Baileys server...');
+    
+    this.process = spawn('node', ['simple-baileys-server.js'], {
+      cwd: __dirname,
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+
+    // Save PID
+    fs.writeFileSync(this.pidFile, this.process.pid.toString());
+
+    this.process.stdout.on('data', (data) => {
+      const output = data.toString();
+      this.log(`[STDOUT] ${output.trim()}`);
+    });
+
+    this.process.stderr.on('data', (data) => {
+      const output = data.toString();
+      this.log(`[STDERR] ${output.trim()}`);
+    });
+
+    this.process.on('close', (code, signal) => {
+      this.log(`❌ Server process closed with code ${code} and signal ${signal}`);
+      this.handleServerExit(code, signal);
+    });
+
+    this.process.on('error', (error) => {
+      this.log(`❌ Server process error: ${error.message}`);
+      this.handleServerError(error);
+    });
+
+    this.log(`✅ Baileys server started with PID: ${this.process.pid}`);
+  }
+
+  handleServerExit(code, signal) {
+    if (signal === 'SIGTERM' || signal === 'SIGINT') {
+      this.log('🛑 Server shutdown requested');
+      return;
+    }
+
+    if (this.restartCount < this.maxRestarts) {
+      this.restartCount++;
+      this.log(`🔄 Restarting server (attempt ${this.restartCount}/${this.maxRestarts}) in ${this.restartDelay}ms...`);
+      
+      setTimeout(() => {
+        this.startServer();
+      }, this.restartDelay);
+    } else {
+      this.log(`❌ Maximum restart attempts (${this.maxRestarts}) reached. Stopping monitor.`);
+      process.exit(1);
+    }
+  }
+
+  handleServerError(error) {
+    this.log(`❌ Server error: ${error.message}`);
+    this.handleServerExit(1, null);
+  }
+
+  handleError(error) {
+    this.log(`❌ Monitor error: ${error.message || error}`);
+    this.shutdown();
+  }
+
+  async healthCheck() {
+    try {
+      const response = await fetch('http://localhost:3000/api/baileys-simple/connections');
+      if (response.ok) {
+        this.log('✅ Health check passed');
+        this.restartCount = 0; // Reset restart count on successful health check
+      } else {
+        throw new Error(`Health check failed with status: ${response.status}`);
+      }
+    } catch (error) {
+      this.log(`❌ Health check failed: ${error.message}`);
+      if (this.process && !this.process.killed) {
+        this.log('🔄 Restarting server due to health check failure...');
+        this.process.kill('SIGTERM');
+      }
+    }
+  }
+
+  startHealthCheck() {
+    Math.min(undefined * 1000, 2147483647)(() => {
+      this.healthCheck();
+    }, this.healthCheckInterval);
+  }
+
+  shutdown() {
+    this.log('🛑 Shutting down Baileys monitor...');
+    
+    if (this.process && !this.process.killed) {
+      this.process.kill('SIGTERM');
+    }
+
+    // Clean up PID file
+    if (fs.existsSync(this.pidFile)) {
+      fs.unlinkSync(this.pidFile);
+    }
+
+    this.log('✅ Baileys monitor shutdown complete');
+    process.exit(0);
+  }
+
+  start() {
+    this.log('🎯 Starting Baileys Monitor...');
+    this.startServer();
+    this.startHealthCheck();
+    this.log('✅ Baileys Monitor is running');
+  }
+}
+
+// Start the monitor
+const monitor = new BaileysMonitor();
+monitor.start();

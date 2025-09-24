@@ -1,0 +1,137 @@
+#!/usr/bin/env node
+
+const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+class AnywhereBaileysStarter {
+  constructor() {
+    this.platform = os.platform();
+    this.serverProcess = null;
+    this.pidFile = path.join(__dirname, 'baileys-anywhere.pid');
+    this.logFile = path.join(__dirname, 'baileys-anywhere.log');
+  }
+
+  start() {
+    console.log('🚀 Iniciando Baileys Server Anywhere...');
+    console.log(`📱 Plataforma: ${this.platform} (${os.arch()})`);
+    console.log(`💻 Sistema: ${os.type()} ${os.release()}`);
+    
+    // Verificar se já está rodando
+    if (this.isServerRunning()) {
+      console.log('✅ Servidor já está rodando');
+      this.showStatus();
+      return;
+    }
+
+    // Iniciar o servidor
+    this.startServer();
+    
+    // Configurar handlers de sinal
+    process.on('SIGINT', () => this.shutdown());
+    process.on('SIGTERM', () => this.shutdown());
+    process.on('SIGUSR2', () => this.restart());
+    
+    // Mostrar status
+    setTimeout(() => this.showStatus(), 3000);
+  }
+
+  isServerRunning() {
+    if (!fs.existsSync(this.pidFile)) {
+      return false;
+    }
+
+    try {
+      const pid = parseInt(fs.readFileSync(this.pidFile, 'utf8'));
+      // Verificar se o processo existe de forma universal
+      try {
+        process.kill(pid, 0);
+        return true;
+      } catch {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
+
+  startServer() {
+    console.log('📱 Iniciando servidor Baileys...');
+    
+    // Iniciar o servidor
+    this.serverProcess = spawn('node', ['simple-baileys-server.js'], {
+      cwd: __dirname,
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+
+    // Salvar PID
+    fs.writeFileSync(this.pidFile, this.serverProcess.pid.toString());
+
+    // Configurar logs
+    const logStream = fs.createWriteStream(this.logFile, { flags: 'a' });
+    this.serverProcess.stdout.pipe(logStream);
+    this.serverProcess.stderr.pipe(logStream);
+
+    this.serverProcess.on('error', (error) => {
+      console.error('❌ Erro no servidor:', error);
+    });
+
+    this.serverProcess.on('exit', (code) => {
+      console.log(`🔄 Servidor encerrado com código: ${code}`);
+      this.cleanup();
+    });
+
+    console.log(`✅ Servidor Baileys iniciado (PID: ${this.serverProcess.pid})`);
+  }
+
+  showStatus() {
+    console.log('\n🎉 Baileys Server está rodando!');
+    console.log('📱 API disponível em: http://localhost:3000/api');
+    console.log('🔗 Teste: http://localhost:3000/api/test');
+    console.log('📝 Logs salvos em:', this.logFile);
+    console.log('💡 Para parar: kill $(cat baileys-anywhere.pid) ou Ctrl+C');
+    console.log('\n🔄 Monitorando servidor... (Ctrl+C para parar)');
+  }
+
+  restart() {
+    console.log('🔄 Reiniciando servidor...');
+    
+    if (this.serverProcess) {
+      this.serverProcess.kill('SIGTERM');
+    }
+    
+    setTimeout(() => {
+      this.startServer();
+    }, 2000);
+  }
+
+  shutdown() {
+    console.log('\n🛑 Parando Baileys Server...');
+    
+    if (this.serverProcess) {
+      this.serverProcess.kill('SIGTERM');
+    }
+    
+    this.cleanup();
+    process.exit(0);
+  }
+
+  cleanup() {
+    if (fs.existsSync(this.pidFile)) {
+      fs.unlinkSync(this.pidFile);
+    }
+  }
+}
+
+// Iniciar o servidor
+const starter = new AnywhereBaileysStarter();
+starter.start();
+
+// Manter o processo vivo e monitorar
+setInterval(() => {
+  if (!starter.isServerRunning()) {
+    console.log('⚠️ Servidor parou, reiniciando...');
+    starter.startServer();
+  }
+}, 30000); // Verificar a cada 30 segundos
